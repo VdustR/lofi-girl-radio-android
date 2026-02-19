@@ -38,6 +38,7 @@ import com.vdustr.lofiradio.ui.theme.Border
 import com.vdustr.lofiradio.ui.theme.Primary
 import com.vdustr.lofiradio.ui.theme.PrimarySubtle
 import com.vdustr.lofiradio.ui.theme.Surface
+import com.vdustr.lofiradio.ui.theme.TextPrimary
 import com.vdustr.lofiradio.ui.theme.TextMuted
 import com.vdustr.lofiradio.ui.theme.TextSecondary
 import com.vdustr.lofiradio.ui.theme.VarelaRound
@@ -61,7 +62,8 @@ fun AboutScreen(onBack: () -> Unit) {
         ) {
             Text(
                 text = stringResource(R.string.about),
-                style = TextStyle(fontFamily = VarelaRound, fontSize = 20.sp)
+                style = TextStyle(fontFamily = VarelaRound, fontSize = 20.sp),
+                color = TextPrimary
             )
             IconButton(onClick = onBack) {
                 Icon(
