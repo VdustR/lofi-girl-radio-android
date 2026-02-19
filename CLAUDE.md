@@ -17,6 +17,14 @@ Unofficial Lofi Girl Radio player for Android. Streams live audio from Lofi Girl
 - **DI:** Manual (Application class as DI root)
 - **Build:** Gradle Kotlin DSL + Version Catalogs
 
+## Documentation Structure
+
+```
+docs/
+├── assets/        # Screenshots, images, and static media for docs
+└── spec/          # Detailed design specifications (01–08)
+```
+
 ## Package Structure
 
 ```

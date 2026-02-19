@@ -2,6 +2,22 @@
 
 An unofficial Android app for streaming Lofi Girl's live radio channels.
 
+<p align="center">
+  <img src="docs/assets/screenshot-stream-list.jpg" alt="Lofi Girl Radio — stream list" width="320" />
+</p>
+
+## Download
+
+Grab the latest APK from the [GitHub Releases](https://github.com/VdustR/lofi-girl-radio-android/releases) page.
+
+| APK variant | Description |
+|-------------|-------------|
+| `arm64-v8a` | Most modern Android phones (recommended) |
+| `armeabi-v7a` | Older 32-bit ARM devices |
+| `x86_64` | x86 emulators / Chromebooks |
+| `x86` | Older x86 devices |
+| `universal` | All architectures (larger size) |
+
 ## Features
 
 - **Live Channel List** — Automatically fetches all currently live streams from the Lofi Girl YouTube channel
