@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vdustr.lofiradio.R
@@ -41,7 +40,6 @@ import com.vdustr.lofiradio.ui.theme.Surface
 import com.vdustr.lofiradio.ui.theme.TextPrimary
 import com.vdustr.lofiradio.ui.theme.TextMuted
 import com.vdustr.lofiradio.ui.theme.TextSecondary
-import com.vdustr.lofiradio.ui.theme.VarelaRound
 
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
@@ -62,7 +60,7 @@ fun AboutScreen(onBack: () -> Unit) {
         ) {
             Text(
                 text = stringResource(R.string.about),
-                style = TextStyle(fontFamily = VarelaRound, fontSize = 20.sp),
+                style = MaterialTheme.typography.headlineLarge,
                 color = TextPrimary
             )
             IconButton(onClick = onBack) {
