@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -29,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vdustr.lofiradio.R
@@ -38,9 +40,9 @@ import com.vdustr.lofiradio.ui.theme.Border
 import com.vdustr.lofiradio.ui.theme.Primary
 import com.vdustr.lofiradio.ui.theme.PrimarySubtle
 import com.vdustr.lofiradio.ui.theme.Surface
+import com.vdustr.lofiradio.ui.theme.TextPrimary
 import com.vdustr.lofiradio.ui.theme.TextMuted
 import com.vdustr.lofiradio.ui.theme.TextSecondary
-import com.vdustr.lofiradio.ui.theme.VarelaRound
 
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
@@ -50,6 +52,7 @@ fun AboutScreen(onBack: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
+            .windowInsetsPadding(WindowInsets.statusBars)
     ) {
         // Top bar
         Row(
@@ -61,7 +64,8 @@ fun AboutScreen(onBack: () -> Unit) {
         ) {
             Text(
                 text = stringResource(R.string.about),
-                style = TextStyle(fontFamily = VarelaRound, fontSize = 20.sp)
+                style = MaterialTheme.typography.headlineLarge,
+                color = TextPrimary
             )
             IconButton(onClick = onBack) {
                 Icon(
