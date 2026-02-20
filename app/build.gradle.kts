@@ -12,7 +12,7 @@ android {
         applicationId = "com.vdustr.lofiradio"
         minSdk = 24
         targetSdk = 35
-        versionName = "1.0.1" // x-release-please-version
+        versionName = "1.0.2" // x-release-please-version
         versionCode = (versionName ?: "1.0.0").substringBefore("-").split(".").let {
             it[0].toInt() * 1_000_000 + it[1].toInt() * 1_000 + it[2].toInt()
         }
