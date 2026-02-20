@@ -43,7 +43,7 @@ import com.vdustr.lofiradio.ui.theme.TextSecondary
 fun PlayerBar(
     currentStream: LofiStream?,
     isPlaying: Boolean,
-    isBuffering: Boolean = false,
+    isBuffering: Boolean,
     onPlayPauseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
