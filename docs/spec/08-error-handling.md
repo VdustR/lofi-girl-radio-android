@@ -68,4 +68,3 @@ YouTube HLS manifest URLs expire after several hours. Handling:
 | Offline | "No Internet Connection" | "Check your connection and try again. Live streams require an active internet connection." |
 | Stream Down | "Stream Temporarily Offline" | "This stream is currently unavailable. Lofi Girl may be switching streams. We'll auto-reconnect." |
 | Extraction | "Something Went Wrong" | "Unable to load streams. This may be a temporary issue. Please try again later." |
-| Cast Failed | (Toast) | "Cast playback failed. Try 'Open in YouTube' to cast from YouTube app." |

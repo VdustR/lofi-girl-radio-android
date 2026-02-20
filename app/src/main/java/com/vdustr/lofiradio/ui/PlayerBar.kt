@@ -15,11 +15,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cast
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +44,6 @@ fun PlayerBar(
     currentStream: LofiStream?,
     isPlaying: Boolean,
     onPlayPauseClick: () -> Unit,
-    onCastClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (currentStream == null) return
@@ -126,16 +123,6 @@ fun PlayerBar(
                         color = TextSecondary
                     )
                 }
-            }
-
-            // Cast button
-            IconButton(onClick = onCastClick) {
-                Icon(
-                    imageVector = Icons.Default.Cast,
-                    contentDescription = "Cast",
-                    tint = TextSecondary,
-                    modifier = Modifier.size(18.dp)
-                )
             }
 
             // Play/Pause button

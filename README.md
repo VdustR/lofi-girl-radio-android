@@ -26,7 +26,6 @@ Grab the latest APK from the [GitHub Releases](https://github.com/VdustR/lofi-gi
 - **Sleep Timer** — Preset durations (15m/30m/1h/2h) or custom time
 - **Fuzzy Search** — Filter channels by name with fuzzy matching
 - **Open in YouTube** — Jump to the live stream in YouTube app or browser
-- **Google Cast** — Cast audio to Chromecast devices
 
 ## Tech Stack
 
@@ -38,7 +37,6 @@ Grab the latest APK from the [GitHub Releases](https://github.com/VdustR/lofi-gi
 | Stream Extraction | NewPipe Extractor |
 | Audio Playback | Media3 ExoPlayer + HLS |
 | Background Playback | Media3 Session (MediaSessionService) |
-| Google Cast | Media3 Cast + Google Cast SDK |
 | Architecture | MVVM (ViewModel + StateFlow) |
 
 ## Building
@@ -61,10 +59,9 @@ Detailed design documents are in [`docs/spec/`](docs/spec/):
 2. [Architecture](docs/spec/02-architecture.md) — Tech stack, MVVM, DI, data flow
 3. [Stream Extraction](docs/spec/03-stream-extraction.md) — NewPipe Extractor usage
 4. [Playback](docs/spec/04-playback.md) — Media3 HLS playback and background service
-5. [Cast](docs/spec/05-cast.md) — Google Cast integration and limitations
-6. [UI Design](docs/spec/06-ui-design.md) — UI spec based on mockup
-7. [Sleep Timer](docs/spec/07-sleep-timer.md) — Timer logic and persistence
-8. [Error Handling](docs/spec/08-error-handling.md) — Error states and retry strategies
+5. [UI Design](docs/spec/06-ui-design.md) — UI spec based on mockup
+6. [Sleep Timer](docs/spec/07-sleep-timer.md) — Timer logic and persistence
+7. [Error Handling](docs/spec/08-error-handling.md) — Error states and retry strategies
 
 ## Disclaimer
 
