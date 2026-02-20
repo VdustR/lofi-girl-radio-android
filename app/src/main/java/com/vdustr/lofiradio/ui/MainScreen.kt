@@ -66,7 +66,6 @@ fun MainScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val sleepTimer by viewModel.sleepTimer.collectAsState()
-    val audioQuality by viewModel.audioQuality.collectAsState()
     val context = LocalContext.current
 
     var showSleepTimerSheet by remember { mutableStateOf(false) }
@@ -181,10 +180,8 @@ fun MainScreen(
             PlayerBar(
                 currentStream = currentStream,
                 isPlaying = isPlaying,
-                audioQuality = audioQuality,
                 onPlayPauseClick = { viewModel.togglePlayPause() },
                 onCastClick = { /* Cast handled via CastButtonFactory */ },
-                onQualityChange = { viewModel.setAudioQuality(it) }
             )
         }
 

@@ -83,18 +83,6 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var playStreamJob: Job? = null
 
-    // --- Audio Quality ---
-
-    enum class AudioQuality(val label: String, val maxBitrate: Int) {
-        AUTO("Auto", Int.MAX_VALUE),
-        HIGH("High", 320_000),
-        NORMAL("Normal", 128_000),
-        LOW("Low", 64_000)
-    }
-
-    private val _audioQuality = MutableStateFlow(AudioQuality.AUTO)
-    val audioQuality: StateFlow<AudioQuality> = _audioQuality.asStateFlow()
-
     // --- Sleep Timer ---
 
     data class SleepTimerState(
@@ -198,16 +186,6 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
-    }
-
-    fun setAudioQuality(quality: AudioQuality) {
-        _audioQuality.value = quality
-        mediaController?.let { controller ->
-            val params = controller.trackSelectionParameters.buildUpon()
-                .setMaxAudioBitrate(quality.maxBitrate)
-                .build()
-            controller.trackSelectionParameters = params
-        }
     }
 
     // --- Sleep Timer ---

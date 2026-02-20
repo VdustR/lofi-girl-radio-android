@@ -31,7 +31,7 @@ docs/
 com.vdustr.lofiradio
 ├── data/          # Data models, NewPipe downloader, stream repository
 ├── playback/      # PlaybackService, CastOptionsProvider
-├── ui/            # Compose screens, components, PlayerBar (quality selector)
+├── ui/            # Compose screens, components, PlayerBar
 │   └── theme/     # Color, Theme, Type
 ├── viewmodel/     # RadioViewModel
 └── util/          # FuzzyMatch helper
@@ -51,7 +51,6 @@ com.vdustr.lofiradio
 - HLS URLs are NOT cached (they expire); re-extract on each play
 - Memory-cache the stream list for fallback on fetch failure
 - `startForeground()` must be called immediately when PlaybackService starts
-- Audio quality selection (Auto/High/Normal/Low) available via PlayerBar dropdown
 - Stream list sorts by viewer count (descending) by default; search results sort by fuzzy match score
 - Notification displays artwork thumbnail, no prev/next buttons, tap opens app
 

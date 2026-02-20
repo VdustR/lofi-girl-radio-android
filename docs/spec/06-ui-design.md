@@ -70,7 +70,7 @@ AI-generated lofi radio icon featuring headphones and a vintage radio with a pur
 │                              │
 ├──────────────────────────────┤
 │ ▶ beats to relax/study       │  ← Player bar
-│   Lofi Girl · LIVE  [♫] [▶] │     ♫ = Audio quality selector
+│   Lofi Girl · LIVE      [▶] │
 └──────────────────────────────┘
 ```
 
@@ -119,7 +119,6 @@ Each shows: icon, title, description, retry button.
 
 - Fixed at bottom
 - Thumbnail + title + "LIVE" indicator
-- Tune icon button — opens `DropdownMenu` for audio quality selection (Auto / High / Normal / Low)
 - Cast button + Play/Pause button
 - Purple gradient progress indicator at top
 

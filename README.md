@@ -22,7 +22,6 @@ Grab the latest APK from the [GitHub Releases](https://github.com/VdustR/lofi-gi
 
 - **Live Channel List** — Automatically fetches all currently live streams from the Lofi Girl YouTube channel
 - **Stream Thumbnails** — Displays live stream thumbnails via Coil image loading
-- **Audio Quality Selection** — Choose between Auto, High, Normal, or Low quality streams
 - **Background Playback** — Audio continues playing with notification controls when the app is in the background
 - **Sleep Timer** — Preset durations (15m/30m/1h/2h) or custom time
 - **Fuzzy Search** — Filter channels by name with fuzzy matching

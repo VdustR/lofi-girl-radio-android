@@ -18,18 +18,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cast
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,21 +40,16 @@ import com.vdustr.lofiradio.ui.theme.LiveRed
 import com.vdustr.lofiradio.ui.theme.PlayerBar
 import com.vdustr.lofiradio.ui.theme.Primary
 import com.vdustr.lofiradio.ui.theme.TextSecondary
-import com.vdustr.lofiradio.viewmodel.RadioViewModel
 
 @Composable
 fun PlayerBar(
     currentStream: LofiStream?,
     isPlaying: Boolean,
-    audioQuality: RadioViewModel.AudioQuality,
     onPlayPauseClick: () -> Unit,
     onCastClick: () -> Unit,
-    onQualityChange: (RadioViewModel.AudioQuality) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (currentStream == null) return
-
-    var showQualityMenu by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.background(PlayerBar)) {
         // Gradient progress line at top
@@ -137,38 +125,6 @@ fun PlayerBar(
                         style = MaterialTheme.typography.labelSmall,
                         color = TextSecondary
                     )
-                }
-            }
-
-            // Quality button
-            Box {
-                IconButton(onClick = { showQualityMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Default.Tune,
-                        contentDescription = "Audio quality",
-                        tint = if (audioQuality != RadioViewModel.AudioQuality.AUTO) Primary else TextSecondary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-                DropdownMenu(
-                    expanded = showQualityMenu,
-                    onDismissRequest = { showQualityMenu = false }
-                ) {
-                    RadioViewModel.AudioQuality.entries.forEach { quality ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = quality.label,
-                                    color = if (quality == audioQuality) Primary
-                                    else MaterialTheme.colorScheme.onSurface
-                                )
-                            },
-                            onClick = {
-                                onQualityChange(quality)
-                                showQualityMenu = false
-                            }
-                        )
-                    }
                 }
             }
 
