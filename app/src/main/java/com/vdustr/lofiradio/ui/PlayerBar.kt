@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +32,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.vdustr.lofiradio.data.LofiStream
-import com.vdustr.lofiradio.ui.theme.Accent
 import com.vdustr.lofiradio.ui.theme.Background
 import com.vdustr.lofiradio.ui.theme.Border
 import com.vdustr.lofiradio.ui.theme.LiveRed
@@ -43,24 +43,13 @@ import com.vdustr.lofiradio.ui.theme.TextSecondary
 fun PlayerBar(
     currentStream: LofiStream?,
     isPlaying: Boolean,
+    isBuffering: Boolean,
     onPlayPauseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (currentStream == null) return
 
     Column(modifier = modifier.background(PlayerBar)) {
-        // Gradient progress line at top
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.65f)
-                .height(2.dp)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(Primary, Accent)
-                    )
-                )
-        )
-
         // Separator
         Box(
             modifier = Modifier
@@ -134,12 +123,20 @@ fun PlayerBar(
                     .clickable(onClick = onPlayPauseClick),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = if (isPlaying) "Pause" else "Play",
-                    tint = Background,
-                    modifier = Modifier.size(16.dp)
-                )
+                if (isBuffering) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        color = Background,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        tint = Background,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
         }
     }

@@ -79,6 +79,9 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying: StateFlow<Boolean> = _isPlaying.asStateFlow()
 
+    private val _isBuffering = MutableStateFlow(false)
+    val isBuffering: StateFlow<Boolean> = _isBuffering.asStateFlow()
+
     private var mediaController: MediaController? = null
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var playStreamJob: Job? = null
@@ -112,10 +115,19 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
         controllerFuture = future
         future.addListener({
             try {
-                mediaController = future.get()
-                mediaController?.addListener(object : Player.Listener {
+                val controller = future.get()
+                mediaController = controller
+
+                // Sync initial state before adding listener to avoid race condition
+                _isPlaying.value = controller.isPlaying
+                _isBuffering.value = (controller.playbackState == Player.STATE_BUFFERING)
+
+                controller.addListener(object : Player.Listener {
                     override fun onIsPlayingChanged(playing: Boolean) {
                         _isPlaying.value = playing
+                    }
+                    override fun onPlaybackStateChanged(state: Int) {
+                        _isBuffering.value = (state == Player.STATE_BUFFERING)
                     }
                 })
             } catch (_: Exception) {
@@ -146,10 +158,14 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
         playStreamJob?.cancel()
         playStreamJob = viewModelScope.launch {
             _currentStream.value = stream
+            _isBuffering.value = true
             try {
                 val hlsUrl = repository.getHlsUrl(stream.videoId)
                 // Check if user switched to a different stream while we were loading
-                if (_currentStream.value?.videoId != stream.videoId) return@launch
+                if (_currentStream.value?.videoId != stream.videoId) {
+                    _isBuffering.value = false
+                    return@launch
+                }
                 val metadataBuilder = MediaMetadata.Builder()
                     .setTitle(stream.title)
                     .setArtist("Lofi Girl")
@@ -163,15 +179,18 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
                     .build()
                 val controller = mediaController
                 if (controller == null) {
+                    _isBuffering.value = false
                     _uiState.value = UiState.Error(ErrorType.EXTRACTION_ERROR, "Playback service not ready")
                     return@launch
                 }
                 controller.setMediaItem(mediaItem)
                 controller.prepare()
                 controller.play()
+                // ExoPlayer listener takes over _isBuffering from here
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                _isBuffering.value = false
                 _uiState.value = UiState.Error(ErrorType.STREAM_DOWN, e.message)
             }
         }
@@ -179,8 +198,12 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
 
     fun togglePlayPause() {
         mediaController?.let { controller ->
-            if (controller.isPlaying) controller.pause()
-            else controller.play()
+            if (controller.playWhenReady) {
+                controller.pause()
+                _isBuffering.value = false
+            } else {
+                controller.play()
+            }
         }
     }
 
@@ -206,9 +229,9 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
                 _sleepTimer.value = _sleepTimer.value.copy(remainingMillis = remaining)
                 delay(1000L)
             }
-            // Timer expired — stop playback
-            mediaController?.stop()
-            _isPlaying.value = false
+            // Timer expired — pause playback
+            mediaController?.pause()
+            _isBuffering.value = false
             _sleepTimer.value = SleepTimerState()
         }
     }

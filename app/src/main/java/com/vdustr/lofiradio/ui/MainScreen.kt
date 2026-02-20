@@ -64,6 +64,7 @@ fun MainScreen(
     val filteredStreams by viewModel.filteredStreams.collectAsState()
     val currentStream by viewModel.currentStream.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
+    val isBuffering by viewModel.isBuffering.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val sleepTimer by viewModel.sleepTimer.collectAsState()
     val context = LocalContext.current
@@ -179,6 +180,7 @@ fun MainScreen(
             PlayerBar(
                 currentStream = currentStream,
                 isPlaying = isPlaying,
+                isBuffering = isBuffering,
                 onPlayPauseClick = { viewModel.togglePlayPause() },
             )
         }
