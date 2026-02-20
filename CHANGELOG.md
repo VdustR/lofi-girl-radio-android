@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.1...v1.0.2) (2026-02-20)
+
+
+### Bug Fixes
+
+* add buffering indicator and sync playback state ([#5](https://github.com/VdustR/lofi-girl-radio-android/issues/5)) ([b3559d9](https://github.com/VdustR/lofi-girl-radio-android/commit/b3559d9d469db9566cf4f8f1dfb787e713523583))
+
 ## [1.0.1](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.0...v1.0.1) (2026-02-19)
 
 
