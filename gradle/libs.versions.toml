@@ -5,7 +5,6 @@ compose-bom = "2026.01.01"
 media3 = "1.9.2"
 okhttp = "4.12.0"
 coil = "3.3.0"
-datastore = "1.1.1"
 cast-framework = "22.3.0"
 newpipe-extractor = "v0.25.2"
 activity-compose = "1.9.3"
@@ -49,9 +48,6 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 # Coil
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
-
-# DataStore
-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # Desugaring
 desugar-jdk-libs-nio = { group = "com.android.tools", name = "desugar_jdk_libs_nio", version.ref = "desugar-jdk-libs-nio" }

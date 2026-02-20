@@ -95,42 +95,6 @@ val audioAttributes = AudioAttributes.Builder()
 player.setAudioAttributes(audioAttributes, /* handleAudioFocus= */ true)
 ```
 
-## Audio Quality
-
-### AudioQuality Enum
-
-```kotlin
-enum class AudioQuality(val maxBitrate: Int) {
-    AUTO(Int.MAX_VALUE),
-    HIGH(256_000),
-    NORMAL(128_000),
-    LOW(64_000),
-}
-```
-
-### Track Selection
-
-Audio quality is applied via `MediaController.trackSelectionParameters`:
-
-```kotlin
-mediaController.trackSelectionParameters = mediaController.trackSelectionParameters
-    .buildUpon()
-    .setMaxAudioBitrate(audioQuality.maxBitrate)
-    .build()
-```
-
-### State Management
-
-- `RadioViewModel` exposes `audioQuality: StateFlow<AudioQuality>` (default: `AUTO`)
-- Quality selection is persisted in `DataStore Preferences`
-- Changing quality takes effect immediately on the current stream (no re-extraction needed)
-
-### UI
-
-- The PlayerBar includes a Tune icon button that opens a `DropdownMenu`
-- Menu lists all `AudioQuality` entries; the active entry is highlighted
-- Selecting a quality updates the ViewModel, which applies it to the player
-
 ## Error Recovery
 
 When ExoPlayer reports a playback error:
