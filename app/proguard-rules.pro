@@ -20,8 +20,5 @@
 -keep class androidx.media3.** { *; }
 -dontwarn androidx.media3.**
 
-# Google Cast
--keep class com.google.android.gms.cast.** { *; }
-
 # jsoup optional re2j dependency (used by NewPipe Extractor)
 -dontwarn com.google.re2j.**

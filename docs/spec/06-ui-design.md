@@ -48,7 +48,7 @@ AI-generated lofi radio icon featuring headphones and a vintage radio with a pur
 
 ```
 ┌──────────────────────────────┐
-│ Lofi Girl Radio [unofficial] │  ← Top bar + Cast + Info icons
+│ Lofi Girl Radio [unofficial] │  ← Top bar + Info icon
 ├──────────────────────────────┤
 │                              │
 │ ┌─ Filter streams... ──────┐ │  ← Search bar
@@ -101,7 +101,6 @@ Each shows: icon, title, description, retry button.
 ### Top Bar
 
 - App title: "Lofi Girl Radio" with `[unofficial]` badge
-- Cast button (visible when Cast devices available)
 - Info icon (opens About screen)
 
 ### StreamListItem
@@ -119,7 +118,7 @@ Each shows: icon, title, description, retry button.
 
 - Fixed at bottom
 - Thumbnail + title + "LIVE" indicator
-- Cast button + Play/Pause button
+- Play/Pause button
 - Purple gradient progress indicator at top
 
 ### Sleep Timer (Bottom Sheet)

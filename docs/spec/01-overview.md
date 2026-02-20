@@ -12,8 +12,7 @@ Lofi Girl Radio is an unofficial Android application that provides a streamlined
 2. **Background playback** — Audio continues with system notification controls
 3. **Low resource usage** — Audio-only mode, no video decoding
 4. **Sleep-friendly** — Built-in sleep timer with persistence across service restarts
-5. **Cast support** — Send audio to Chromecast devices
-6. **Offline resilience** — Graceful error handling with cached stream lists
+5. **Offline resilience** — Graceful error handling with cached stream lists
 
 ## Non-Goals
 

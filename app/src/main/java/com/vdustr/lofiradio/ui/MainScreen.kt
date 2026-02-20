@@ -86,7 +86,6 @@ fun MainScreen(
         ) {
             // Top Bar
             TopBar(
-                onCastClick = { /* Cast handled via CastButtonFactory */ },
                 onSettingsClick = { showAboutScreen = true }
             )
 
@@ -181,7 +180,6 @@ fun MainScreen(
                 currentStream = currentStream,
                 isPlaying = isPlaying,
                 onPlayPauseClick = { viewModel.togglePlayPause() },
-                onCastClick = { /* Cast handled via CastButtonFactory */ },
             )
         }
 
@@ -205,7 +203,6 @@ fun MainScreen(
 
 @Composable
 private fun TopBar(
-    onCastClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Row(
@@ -237,9 +234,6 @@ private fun TopBar(
         }
 
         Row {
-            IconButton(onClick = onCastClick) {
-                // Cast icon placeholder
-            }
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = Icons.Outlined.Info,

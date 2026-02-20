@@ -11,12 +11,10 @@
 | Stream extraction | NewPipe Extractor | 0.25.2 (JitPack) |
 | Audio playback | Media3 ExoPlayer + HLS | 1.9.x |
 | Background playback | Media3 Session | 1.9.x |
-| Google Cast | Media3 Cast + Cast SDK | 1.9.2 / 22.3.0 |
 | Image loading | Coil 3 | 3.3.0 |
 | Architecture | MVVM | — |
 | DI | Manual (Application class) | — |
 | HTTP | OkHttp | 4.12.x |
-| Persistence | DataStore Preferences | 1.1.x |
 | Build | Gradle Kotlin DSL + Version Catalogs | 8.x |
 
 ## Architecture Pattern: MVVM
@@ -31,7 +29,7 @@ View (Compose)  ←→  ViewModel  ←→  Repository  ←→  NewPipe Extractor
 1. **UI Layer** — Jetpack Compose screens observe `StateFlow` from ViewModel
 2. **ViewModel** — `RadioViewModel` holds all UI state, delegates to repository and service
 3. **Data Layer** — `StreamRepository` wraps NewPipe Extractor calls, manages caching
-4. **Playback Layer** — `PlaybackService` (MediaSessionService) manages ExoPlayer and CastPlayer
+4. **Playback Layer** — `PlaybackService` (MediaSessionService) manages ExoPlayer
 
 ## Dependency Injection
 
@@ -72,9 +70,6 @@ User Taps Channel
     → ExoPlayer (HlsMediaSource)
     → MediaMetadata includes artworkUri (thumbnail URL for notification)
 
-User Enables Cast
-  → CastPlayer replaces ExoPlayer
-  → On failure → fallback to "Open in YouTube"
 ```
 
 ## Threading

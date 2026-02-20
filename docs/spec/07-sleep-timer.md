@@ -75,4 +75,3 @@ User cancels timer
 1. **App killed by system** — Timer state in DataStore. On next service start, check and resume/expire.
 2. **Phone rebooted** — Timer state persists in DataStore. Same logic as above.
 3. **User switches streams** — Timer continues (it's time-based, not stream-based).
-4. **Timer expires during Cast** — Same behavior: fade out and stop.

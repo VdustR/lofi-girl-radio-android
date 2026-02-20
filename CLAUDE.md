@@ -12,7 +12,6 @@ Unofficial Lofi Girl Radio player for Android. Streams live audio from Lofi Girl
 - **Stream extraction:** NewPipe Extractor (JitPack)
 - **Playback:** Media3 ExoPlayer + HLS
 - **Background playback:** Media3 Session (MediaSessionService)
-- **Cast:** Media3 Cast + Google Cast SDK (Default Receiver)
 - **Architecture:** MVVM (ViewModel + StateFlow)
 - **DI:** Manual (Application class as DI root)
 - **Build:** Gradle Kotlin DSL + Version Catalogs
@@ -22,7 +21,7 @@ Unofficial Lofi Girl Radio player for Android. Streams live audio from Lofi Girl
 ```
 docs/
 ├── assets/        # Screenshots, images, and static media for docs
-└── spec/          # Detailed design specifications (01–08)
+└── spec/          # Detailed design specifications (01–04, 06–08)
 ```
 
 ## Package Structure
@@ -30,7 +29,7 @@ docs/
 ```
 com.vdustr.lofiradio
 ├── data/          # Data models, NewPipe downloader, stream repository
-├── playback/      # PlaybackService, CastOptionsProvider
+├── playback/      # PlaybackService
 ├── ui/            # Compose screens, components, PlayerBar
 │   └── theme/     # Color, Theme, Type
 ├── viewmodel/     # RadioViewModel
@@ -56,16 +55,15 @@ com.vdustr.lofiradio
 
 ## Spec Documents
 
-See `docs/spec/01-08` for detailed specifications:
+See `docs/spec/` for detailed specifications:
 
 1. [Overview](docs/spec/01-overview.md)
 2. [Architecture](docs/spec/02-architecture.md)
 3. [Stream Extraction](docs/spec/03-stream-extraction.md)
 4. [Playback](docs/spec/04-playback.md)
-5. [Cast](docs/spec/05-cast.md)
-6. [UI Design](docs/spec/06-ui-design.md)
-7. [Sleep Timer](docs/spec/07-sleep-timer.md)
-8. [Error Handling](docs/spec/08-error-handling.md)
+5. [UI Design](docs/spec/06-ui-design.md)
+6. [Sleep Timer](docs/spec/07-sleep-timer.md)
+7. [Error Handling](docs/spec/08-error-handling.md)
 
 ## Release CI
 
@@ -79,6 +77,5 @@ See `docs/spec/01-08` for detailed specifications:
 ## Known Limitations
 
 1. NewPipe Extractor depends on YouTube HTML scraping — may break when YouTube changes layout
-2. YouTube HLS URLs contain session tokens — Chromecast may fail to play them
-3. Vendor ROMs (MIUI, ColorOS) may kill background services aggressively
-4. HLS URLs expire after a few hours — must re-extract on each play
+2. Vendor ROMs (MIUI, ColorOS) may kill background services aggressively
+3. HLS URLs expire after a few hours — must re-extract on each play
