@@ -22,6 +22,7 @@ import com.vdustr.lofiradio.playback.PlaybackService
 import com.vdustr.lofiradio.util.fuzzyMatchScore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -62,7 +63,7 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
         _searchQuery
     ) { streams, query ->
         if (query.isBlank()) {
-            streams.sortedByDescending { it.viewerCount }
+            streams
         } else {
             streams.mapNotNull { stream ->
                 val score = fuzzyMatchScore(query, stream.title)
@@ -82,7 +83,7 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
     private val _isBuffering = MutableStateFlow(false)
     val isBuffering: StateFlow<Boolean> = _isBuffering.asStateFlow()
 
-    private var mediaController: MediaController? = null
+    @Volatile private var mediaController: MediaController? = null
     private var controllerFuture: ListenableFuture<MediaController>? = null
     private var playStreamJob: Job? = null
 
@@ -143,7 +144,7 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
             _uiState.value = UiState.Loading
             try {
                 val streams = repository.fetchLiveStreams()
-                _streams.value = streams
+                _streams.value = streams.sortedByDescending { it.viewerCount }
                 _uiState.value = if (streams.isEmpty()) UiState.Empty
                 else UiState.Ready(streams)
             } catch (e: java.io.IOException) {
@@ -224,15 +225,16 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
         sleepTimerJob = viewModelScope.launch {
             val endTime = SystemClock.elapsedRealtime() + durationMillis
             while (true) {
+                ensureActive()
                 val remaining = endTime - SystemClock.elapsedRealtime()
                 if (remaining <= 0) break
                 _sleepTimer.value = _sleepTimer.value.copy(remainingMillis = remaining)
                 delay(1000L)
             }
-            // Timer expired — pause playback
+            // Timer expired — reset timer state first, then pause
+            _sleepTimer.value = SleepTimerState()
             mediaController?.pause()
             _isBuffering.value = false
-            _sleepTimer.value = SleepTimerState()
         }
     }
 

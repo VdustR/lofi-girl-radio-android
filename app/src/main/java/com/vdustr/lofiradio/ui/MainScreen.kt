@@ -22,13 +22,11 @@ import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,10 +50,11 @@ import com.vdustr.lofiradio.ui.theme.Surface
 import com.vdustr.lofiradio.ui.theme.TextMuted
 import com.vdustr.lofiradio.ui.theme.TextPrimary
 import com.vdustr.lofiradio.ui.theme.TextSecondary
+import com.vdustr.lofiradio.ui.theme.NunitoSans
+import com.vdustr.lofiradio.ui.theme.PrimarySubtle
 import com.vdustr.lofiradio.ui.theme.VarelaRound
 import com.vdustr.lofiradio.viewmodel.RadioViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     viewModel: RadioViewModel,
@@ -66,7 +65,6 @@ fun MainScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val isBuffering by viewModel.isBuffering.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val sleepTimer by viewModel.sleepTimer.collectAsState()
     val context = LocalContext.current
 
     var showSleepTimerSheet by remember { mutableStateOf(false) }
@@ -86,8 +84,9 @@ fun MainScreen(
                 .padding(padding)
         ) {
             // Top Bar
+            val onSettingsClick = remember { { showAboutScreen = true } }
             TopBar(
-                onSettingsClick = { showAboutScreen = true }
+                onSettingsClick = onSettingsClick
             )
 
             // Main content
@@ -123,28 +122,31 @@ fun MainScreen(
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
-                        // Stream info
-                        currentStream?.let { stream ->
-                            item {
-                                StreamInfoSection(stream = stream)
+                        // Always present in LazyColumn (stable position), content conditionally rendered
+                        item(key = "action_chips") {
+                            val sleepTimer by viewModel.sleepTimer.collectAsState()
+                            val showSleepTimer = isPlaying || isBuffering || sleepTimer.isActive
+                            val showOpenYouTube = currentStream != null
+                            if (showSleepTimer || showOpenYouTube) {
+                                val onSleepTimerClick = remember { { showSleepTimerSheet = true } }
+                                val openYouTube = remember(context) { { viewModel.openInYouTube(context) } }
+                                ActionChips(
+                                    showSleepTimer = showSleepTimer,
+                                    showOpenYouTube = showOpenYouTube,
+                                    sleepTimerActive = sleepTimer.isActive,
+                                    sleepTimerRemaining = sleepTimer.remainingMillis,
+                                    onSleepTimerClick = onSleepTimerClick,
+                                    onOpenYouTubeClick = openYouTube
+                                )
                             }
-                        }
-
-                        // Action chips
-                        item {
-                            ActionChips(
-                                sleepTimerActive = sleepTimer.isActive,
-                                sleepTimerRemaining = sleepTimer.remainingMillis,
-                                onSleepTimerClick = { showSleepTimerSheet = true },
-                                onOpenYouTubeClick = { viewModel.openInYouTube(context) }
-                            )
                         }
 
                         // Search bar
                         item {
+                            val onQueryChange = remember { { q: String -> viewModel.updateSearchQuery(q) } }
                             SearchBar(
                                 query = searchQuery,
-                                onQueryChange = { viewModel.updateSearchQuery(it) }
+                                onQueryChange = onQueryChange
                             )
                         }
 
@@ -162,11 +164,12 @@ fun MainScreen(
                             items = filteredStreams,
                             key = { _, stream -> stream.videoId }
                         ) { index, stream ->
+                            val onClick = remember(stream) { { viewModel.playStream(stream) } }
                             StreamListItem(
                                 stream = stream,
                                 isActive = stream.videoId == currentStream?.videoId,
                                 index = index,
-                                onClick = { viewModel.playStream(stream) }
+                                onClick = onClick
                             )
                         }
 
@@ -177,16 +180,18 @@ fun MainScreen(
             }
 
             // Bottom Player Bar
+            val onPlayPauseClick = remember { { viewModel.togglePlayPause() } }
             PlayerBar(
                 currentStream = currentStream,
                 isPlaying = isPlaying,
                 isBuffering = isBuffering,
-                onPlayPauseClick = { viewModel.togglePlayPause() },
+                onPlayPauseClick = onPlayPauseClick,
             )
         }
 
         // Sleep Timer Bottom Sheet
         if (showSleepTimerSheet) {
+            val sleepTimer by viewModel.sleepTimer.collectAsState()
             SleepTimerSheet(
                 sleepTimerState = sleepTimer,
                 onSelectPreset = { minutes ->
@@ -220,7 +225,7 @@ private fun TopBar(
                 style = TextStyle(
                     fontFamily = VarelaRound,
                     fontSize = 20.sp,
-                    brush = Brush.linearGradient(colors = listOf(Primary, Accent))
+                    brush = remember { Brush.linearGradient(colors = listOf(Primary, Accent)) }
                 )
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -235,40 +240,12 @@ private fun TopBar(
             )
         }
 
-        Row {
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = "About",
-                    tint = TextSecondary,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun StreamInfoSection(
-    stream: com.vdustr.lofiradio.data.LofiStream,
-) {
-    Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp)) {
-        Text(
-            text = stream.title,
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "Lofi Girl",
-                style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary
-            )
-            Text(" · ", color = TextMuted, style = MaterialTheme.typography.bodySmall)
-            Text(
-                text = "Streaming now",
-                style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary
+        IconButton(onClick = onSettingsClick) {
+            Icon(
+                imageVector = Icons.Outlined.Info,
+                contentDescription = "About",
+                tint = TextSecondary,
+                modifier = Modifier.size(20.dp)
             )
         }
     }
@@ -276,6 +253,8 @@ private fun StreamInfoSection(
 
 @Composable
 private fun ActionChips(
+    showSleepTimer: Boolean,
+    showOpenYouTube: Boolean,
     sleepTimerActive: Boolean,
     sleepTimerRemaining: Long,
     onSleepTimerClick: () -> Unit,
@@ -285,17 +264,21 @@ private fun ActionChips(
         modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ActionChip(
-            icon = { Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(14.dp)) },
-            label = if (sleepTimerActive) formatTimer(sleepTimerRemaining) else "Sleep Timer",
-            isActive = sleepTimerActive,
-            onClick = onSleepTimerClick
-        )
-        ActionChip(
-            icon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(14.dp)) },
-            label = "Open in YouTube",
-            onClick = onOpenYouTubeClick
-        )
+        if (showSleepTimer) {
+            ActionChip(
+                icon = { Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(14.dp)) },
+                label = if (sleepTimerActive) formatTimer(sleepTimerRemaining) else "Sleep Timer",
+                isActive = sleepTimerActive,
+                onClick = onSleepTimerClick
+            )
+        }
+        if (showOpenYouTube) {
+            ActionChip(
+                icon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(14.dp)) },
+                label = "Open in YouTube",
+                onClick = onOpenYouTubeClick
+            )
+        }
     }
 }
 
@@ -310,7 +293,7 @@ private fun ActionChip(
         modifier = Modifier
             .clip(RoundedCornerShape(18.dp))
             .background(
-                if (isActive) com.vdustr.lofiradio.ui.theme.PrimarySubtle
+                if (isActive) PrimarySubtle
                 else Surface
             )
             .clickable(onClick = onClick)
@@ -354,7 +337,7 @@ private fun SearchBar(
             textStyle = TextStyle(
                 color = TextPrimary,
                 fontSize = 13.sp,
-                fontFamily = com.vdustr.lofiradio.ui.theme.NunitoSans
+                fontFamily = NunitoSans
             ),
             cursorBrush = SolidColor(Primary),
             singleLine = true,
