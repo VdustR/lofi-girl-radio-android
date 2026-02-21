@@ -3,7 +3,7 @@
 An unofficial Android app for streaming Lofi Girl's live radio channels.
 
 <p align="center">
-  <img src="docs/assets/screenshot-stream-list.jpg" alt="Lofi Girl Radio — stream list" width="320" />
+  <img src="docs/assets/screenshot-stream-list.jpg" alt="Lofi Girl Radio — playing lofi hip hop radio" width="320" />
 </p>
 
 ## Download
