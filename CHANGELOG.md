@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.3...v1.0.4) (2026-02-21)
+
+
+### Bug Fixes
+
+* redesign sleep timer with dual-mode support and relocate YouTube button ([#9](https://github.com/VdustR/lofi-girl-radio-android/issues/9)) ([57a9670](https://github.com/VdustR/lofi-girl-radio-android/commit/57a9670def7f7b167903664a9a6a92dc7380b436))
+
 ## [1.0.3](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.2...v1.0.3) (2026-02-21)
 
 
