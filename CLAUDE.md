@@ -52,6 +52,7 @@ com.vdustr.lofiradio
 - `startForeground()` must be called immediately when PlaybackService starts
 - Stream list sorts by viewer count (descending) by default; search results sort by fuzzy match score
 - Notification displays artwork thumbnail, no prev/next buttons, tap opens app
+- Always update spec documents (`docs/spec/`) before implementing UI or behavior changes
 
 ## Spec Documents
 

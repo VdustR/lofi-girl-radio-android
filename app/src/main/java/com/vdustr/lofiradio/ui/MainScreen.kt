@@ -1,7 +1,6 @@
 package com.vdustr.lofiradio.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +17,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,14 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vdustr.lofiradio.ui.theme.Accent
 import com.vdustr.lofiradio.ui.theme.Background
-import com.vdustr.lofiradio.ui.theme.Border
 import com.vdustr.lofiradio.ui.theme.Primary
 import com.vdustr.lofiradio.ui.theme.Surface
 import com.vdustr.lofiradio.ui.theme.TextMuted
 import com.vdustr.lofiradio.ui.theme.TextPrimary
 import com.vdustr.lofiradio.ui.theme.TextSecondary
 import com.vdustr.lofiradio.ui.theme.NunitoSans
-import com.vdustr.lofiradio.ui.theme.PrimarySubtle
 import com.vdustr.lofiradio.ui.theme.VarelaRound
 import com.vdustr.lofiradio.viewmodel.RadioViewModel
 
@@ -65,6 +61,7 @@ fun MainScreen(
     val isPlaying by viewModel.isPlaying.collectAsState()
     val isBuffering by viewModel.isBuffering.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
+    val sleepTimerState by viewModel.sleepTimer.collectAsState()
     val context = LocalContext.current
 
     var showSleepTimerSheet by remember { mutableStateOf(false) }
@@ -74,6 +71,8 @@ fun MainScreen(
         AboutScreen(onBack = { showAboutScreen = false })
         return
     }
+
+    val openYouTube = remember(context) { { viewModel.openInYouTube(context) } }
 
     Scaffold(
         containerColor = Background
@@ -85,7 +84,10 @@ fun MainScreen(
         ) {
             // Top Bar
             val onSettingsClick = remember { { showAboutScreen = true } }
+            val onSleepTimerClick = remember { { showSleepTimerSheet = true } }
             TopBar(
+                sleepTimerActive = sleepTimerState.isActive,
+                onSleepTimerClick = onSleepTimerClick,
                 onSettingsClick = onSettingsClick
             )
 
@@ -122,25 +124,6 @@ fun MainScreen(
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
-                        // Always present in LazyColumn (stable position), content conditionally rendered
-                        item(key = "action_chips") {
-                            val sleepTimer by viewModel.sleepTimer.collectAsState()
-                            val showSleepTimer = isPlaying || isBuffering || sleepTimer.isActive
-                            val showOpenYouTube = currentStream != null
-                            if (showSleepTimer || showOpenYouTube) {
-                                val onSleepTimerClick = remember { { showSleepTimerSheet = true } }
-                                val openYouTube = remember(context) { { viewModel.openInYouTube(context) } }
-                                ActionChips(
-                                    showSleepTimer = showSleepTimer,
-                                    showOpenYouTube = showOpenYouTube,
-                                    sleepTimerActive = sleepTimer.isActive,
-                                    sleepTimerRemaining = sleepTimer.remainingMillis,
-                                    onSleepTimerClick = onSleepTimerClick,
-                                    onOpenYouTubeClick = openYouTube
-                                )
-                            }
-                        }
-
                         // Search bar
                         item {
                             val onQueryChange = remember { { q: String -> viewModel.updateSearchQuery(q) } }
@@ -186,22 +169,17 @@ fun MainScreen(
                 isPlaying = isPlaying,
                 isBuffering = isBuffering,
                 onPlayPauseClick = onPlayPauseClick,
+                onOpenYouTubeClick = if (currentStream != null) openYouTube else null,
+                sleepTimerRemainingMillis = if (sleepTimerState.isActive) sleepTimerState.remainingMillis else null,
             )
         }
 
         // Sleep Timer Bottom Sheet
         if (showSleepTimerSheet) {
-            val sleepTimer by viewModel.sleepTimer.collectAsState()
             SleepTimerSheet(
-                sleepTimerState = sleepTimer,
-                onSelectPreset = { minutes ->
-                    viewModel.startSleepTimer(minutes)
-                    showSleepTimerSheet = false
-                },
-                onCancel = {
-                    viewModel.cancelSleepTimer()
-                    showSleepTimerSheet = false
-                },
+                sleepTimerState = sleepTimerState,
+                onStart = { durationMillis -> viewModel.startSleepTimer(durationMillis) },
+                onCancel = { viewModel.cancelSleepTimer() },
                 onDismiss = { showSleepTimerSheet = false }
             )
         }
@@ -210,6 +188,8 @@ fun MainScreen(
 
 @Composable
 private fun TopBar(
+    sleepTimerActive: Boolean,
+    onSleepTimerClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Row(
@@ -219,7 +199,10 @@ private fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = "Lofi Girl Radio",
                 style = TextStyle(
@@ -240,73 +223,24 @@ private fun TopBar(
             )
         }
 
-        IconButton(onClick = onSettingsClick) {
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = "About",
-                tint = TextSecondary,
-                modifier = Modifier.size(20.dp)
-            )
+        Row {
+            IconButton(onClick = onSleepTimerClick) {
+                Icon(
+                    imageVector = Icons.Default.Timer,
+                    contentDescription = "Sleep Timer",
+                    tint = if (sleepTimerActive) Primary else TextSecondary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = "About",
+                    tint = TextSecondary,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
-    }
-}
-
-@Composable
-private fun ActionChips(
-    showSleepTimer: Boolean,
-    showOpenYouTube: Boolean,
-    sleepTimerActive: Boolean,
-    sleepTimerRemaining: Long,
-    onSleepTimerClick: () -> Unit,
-    onOpenYouTubeClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (showSleepTimer) {
-            ActionChip(
-                icon = { Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(14.dp)) },
-                label = if (sleepTimerActive) formatTimer(sleepTimerRemaining) else "Sleep Timer",
-                isActive = sleepTimerActive,
-                onClick = onSleepTimerClick
-            )
-        }
-        if (showOpenYouTube) {
-            ActionChip(
-                icon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(14.dp)) },
-                label = "Open in YouTube",
-                onClick = onOpenYouTubeClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun ActionChip(
-    icon: @Composable () -> Unit,
-    label: String,
-    isActive: Boolean = false,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(18.dp))
-            .background(
-                if (isActive) PrimarySubtle
-                else Surface
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 7.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
-    ) {
-        icon()
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = if (isActive) Primary else TextSecondary
-        )
     }
 }
 
@@ -353,13 +287,4 @@ private fun SearchBar(
             }
         )
     }
-}
-
-private fun formatTimer(millis: Long): String {
-    val totalSeconds = millis / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-    return if (hours > 0) String.format(java.util.Locale.US, "%d:%02d:%02d", hours, minutes, seconds)
-    else String.format(java.util.Locale.US, "%d:%02d", minutes, seconds)
 }

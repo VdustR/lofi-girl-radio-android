@@ -91,8 +91,7 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
 
     data class SleepTimerState(
         val isActive: Boolean = false,
-        val remainingMillis: Long = 0L,
-        val selectedPresetMinutes: Int? = null
+        val remainingMillis: Long = 0L
     )
 
     private val _sleepTimer = MutableStateFlow(SleepTimerState())
@@ -214,22 +213,21 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
 
     // --- Sleep Timer ---
 
-    fun startSleepTimer(minutes: Int) {
+    fun startSleepTimer(durationMillis: Long) {
+        if (durationMillis <= 0L) return
         sleepTimerJob?.cancel()
-        val durationMillis = minutes * 60_000L
         _sleepTimer.value = SleepTimerState(
             isActive = true,
-            remainingMillis = durationMillis,
-            selectedPresetMinutes = minutes
+            remainingMillis = durationMillis
         )
         sleepTimerJob = viewModelScope.launch {
             val endTime = SystemClock.elapsedRealtime() + durationMillis
             while (true) {
-                ensureActive()
-                val remaining = endTime - SystemClock.elapsedRealtime()
-                if (remaining <= 0) break
-                _sleepTimer.value = _sleepTimer.value.copy(remainingMillis = remaining)
                 delay(1000L)
+                ensureActive()
+                val remaining = (endTime - SystemClock.elapsedRealtime()).coerceAtLeast(0L)
+                if (remaining == 0L) break
+                _sleepTimer.value = _sleepTimer.value.copy(remainingMillis = remaining)
             }
             // Timer expired — reset timer state first, then pause
             _sleepTimer.value = SleepTimerState()
