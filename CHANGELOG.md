@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.2...v1.0.3) (2026-02-21)
+
+
+### Bug Fixes
+
+* improve recomposition performance and sleep timer reliability ([cc1536c](https://github.com/VdustR/lofi-girl-radio-android/commit/cc1536c810535e34db7ea00d85fe355d735deef1))
+
 ## [1.0.2](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.1...v1.0.2) (2026-02-20)
 
 
