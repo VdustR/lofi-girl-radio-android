@@ -214,7 +214,7 @@ class RadioViewModel(application: Application) : AndroidViewModel(application) {
     // --- Sleep Timer ---
 
     fun startSleepTimer(durationMillis: Long) {
-        if (durationMillis <= 0L) return
+        if (durationMillis < 60_000L) return
         sleepTimerJob?.cancel()
         _sleepTimer.value = SleepTimerState(
             isActive = true,
