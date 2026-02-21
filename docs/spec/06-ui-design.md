@@ -23,7 +23,6 @@ Dark theme inspired by Lofi Girl's aesthetic. Based on the HTML mockup (`lofi-st
 | textSecondary | `#A78BFA` | Secondary text |
 | textMuted | `#6D5D8A` | Muted text |
 | playerBar | `#16101F` | Bottom player bg |
-| liveRed | `#EF4444` | Live indicator |
 | error | `#F87171` | Error states |
 | warning | `#FBBF24` | Warning states |
 | success | `#34D399` | Success states |
@@ -47,39 +46,25 @@ AI-generated lofi radio icon featuring headphones and a vintage radio with a pur
 ### 1. Main Screen (Home)
 
 ```
-┌──────────────────────────────┐
-│ Lofi Girl Radio [unofficial] │  ← Top bar + Info icon
-├──────────────────────────────┤
-│                              │
-│ ┌─ Filter streams... ──────┐ │  ← Search bar
-│                              │
-│ All Live Streams             │
-│ ┌──────────────────────────┐ │
-│ │ [thumb] beats to relax   │ │  ← Active (highlighted)
-│ │         32,451 · LIVE    │ │
-│ ├──────────────────────────┤ │
-│ │ [thumb] beats to sleep   │ │
-│ │         28,103 · LIVE    │ │
-│ ├──────────────────────────┤ │
-│ │ [thumb] peaceful piano   │ │
-│ │         15,220 · LIVE    │ │
-│ ├──────────────────────────┤ │
-│ │ [thumb] dark ambient     │ │
-│ │          8,910 · LIVE    │ │
-│ └──────────────────────────┘ │
-│                              │
-├──────────────────────────────┤
-│ ▶ beats to relax/study       │  ← Player bar
-│   Lofi Girl · LIVE      [▶] │
-└──────────────────────────────┘
+┌──────────────────────────────────────┐
+│ Lofi Girl Radio [unofficial] [⏰][ⓘ]│ ← timer + info icons
+├──────────────────────────────────────┤
+│ ┌─ Filter streams... ──────────┐    │
+│ All Live Streams                     │
+│ ┌──────────────────────────────┐    │
+│ │ [thumb] beats to relax 10.6K │    │
+│ │ [thumb] beats to sleep  2.7K │    │
+│ └──────────────────────────────┘    │
+├──────────────────────────────────────┤
+│ [thumb] beats to relax  [↗]    [▶] │ ← YouTube + play/pause
+└──────────────────────────────────────┘
 ```
 
 ### 2. Sleep Timer (Bottom Sheet)
 
 - Modal bottom sheet overlaying main screen
-- Preset options: 15m, 30m, 1h, 2h
-- Custom time input (HH:MM picker)
-- Radio-button style selection
+- Two modes: Duration (presets + custom stepper) and At Time (specific time with cross-midnight)
+- See [07 — Sleep Timer](07-sleep-timer.md) for full layout
 
 ### 3. About Screen
 
@@ -101,12 +86,13 @@ Each shows: icon, title, description, retry button.
 ### Top Bar
 
 - App title: "Lofi Girl Radio" with `[unofficial]` badge
-- Info icon (opens About screen)
+- Right side: Timer icon (left) + Info icon (right)
+- Timer icon: `TextSecondary` when inactive, `Primary` when timer is active
+- Left Row uses `Modifier.weight(1f)` to prevent overflow on small screens
 
 ### StreamListItem
 
 - Thumbnail loaded via Coil (from stream `thumbnailUrl`)
-- Live indicator (red dot)
 - Stream title
 - Viewer count
 
@@ -117,10 +103,11 @@ Each shows: icon, title, description, retry button.
 ### PlayerBar
 
 - Fixed at bottom
-- Thumbnail + title + "LIVE" indicator
-- Play/Pause button
+- Thumbnail + title (weight=1f) + YouTube button + Play/Pause button
+- YouTube button: `IconButton` (default 48dp touch target) with `OpenInNew` icon (16dp, tint=TextMuted). Only shown when `onOpenYouTubeClick` is provided.
+- Play/Pause button: circular purple button
 - Purple gradient progress indicator at top
 
 ### Sleep Timer (Bottom Sheet)
 
-- See Screens > Sleep Timer above
+- See [07 — Sleep Timer](07-sleep-timer.md) for detailed layout and behavior

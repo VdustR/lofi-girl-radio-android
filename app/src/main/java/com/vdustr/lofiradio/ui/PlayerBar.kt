@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,8 @@ import com.vdustr.lofiradio.ui.theme.Background
 import com.vdustr.lofiradio.ui.theme.Border
 import com.vdustr.lofiradio.ui.theme.PlayerBar
 import com.vdustr.lofiradio.ui.theme.Primary
+import com.vdustr.lofiradio.ui.theme.TextMuted
+import com.vdustr.lofiradio.util.formatTimer
 
 @Composable
 fun PlayerBar(
@@ -45,6 +49,8 @@ fun PlayerBar(
     isPlaying: Boolean,
     isBuffering: Boolean,
     onPlayPauseClick: () -> Unit,
+    onOpenYouTubeClick: (() -> Unit)? = null,
+    sleepTimerRemainingMillis: Long? = null,
     modifier: Modifier = Modifier
 ) {
     if (currentStream == null) return
@@ -85,16 +91,36 @@ fun PlayerBar(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            // Title
-            Text(
-                text = currentStream.title,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontWeight = FontWeight.SemiBold
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
+            // Title + optional sleep timer subtitle
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = currentStream.title,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (sleepTimerRemainingMillis != null) {
+                    Text(
+                        text = "\u23F2 ${formatTimer(sleepTimerRemainingMillis)}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Primary.copy(alpha = 0.8f),
+                    )
+                }
+            }
+
+            // YouTube button
+            if (onOpenYouTubeClick != null) {
+                IconButton(onClick = onOpenYouTubeClick) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = "Open in YouTube",
+                        tint = TextMuted,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
 
             // Play/Pause button
             Box(

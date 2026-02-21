@@ -19,7 +19,6 @@ val TextSecondary = Color(0xFFA78BFA)
 val TextMuted = Color(0xFF6D5D8A)
 
 val PlayerBar = Color(0xFF16101F)
-val LiveRed = Color(0xFFEF4444)
 
 val ErrorColor = Color(0xFFF87171)
 val WarningColor = Color(0xFFFBBF24)
