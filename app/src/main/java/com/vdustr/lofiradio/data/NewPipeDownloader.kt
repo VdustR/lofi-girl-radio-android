@@ -48,7 +48,7 @@ class NewPipeDownloader private constructor(
                 resp.code,
                 resp.message,
                 resp.headers.toMultimap(),
-                resp.body?.string(),
+                resp.body.string(),
                 resp.request.url.toString()
             )
         }

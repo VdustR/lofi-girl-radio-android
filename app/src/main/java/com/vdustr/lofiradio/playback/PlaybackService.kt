@@ -65,7 +65,7 @@ class PlaybackService : MediaSessionService() {
                         .remove(Player.COMMAND_SEEK_TO_NEXT)
                         .remove(Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
                         .build()
-                    return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+                    return MediaSession.ConnectionResult.AcceptedResultBuilder(session, controller)
                         .setAvailablePlayerCommands(playerCommands)
                         .build()
                 }
