@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.4...v1.0.5) (2026-08-09)
+
+
+### Bug Fixes
+
+* restore builds and stream playback ([#12](https://github.com/VdustR/lofi-girl-radio-android/issues/12)) ([4d60524](https://github.com/VdustR/lofi-girl-radio-android/commit/4d60524a798a2f5b40f2d457d409e502758039e4))
+
 ## [1.0.4](https://github.com/VdustR/lofi-girl-radio-android/compare/v1.0.3...v1.0.4) (2026-02-21)
 
 
