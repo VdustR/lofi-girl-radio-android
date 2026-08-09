@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.vdustr.lofiradio"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.vdustr.lofiradio"
@@ -67,13 +66,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
@@ -103,7 +104,10 @@ dependencies {
     implementation(libs.media3.session)
 
     // NewPipe Extractor
-    implementation(libs.newpipe.extractor)
+    implementation(libs.newpipe.extractor) {
+        // NewPipe uses Rhino directly; rhino-engine is a desktop JVM JSR-223 adapter.
+        exclude(group = "org.mozilla", module = "rhino-engine")
+    }
 
     // OkHttp
     implementation(libs.okhttp)
